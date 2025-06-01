@@ -1,0 +1,20 @@
+{
+    "name": "ngomafortuna/validate",
+    "description": "Input data validation library based on type (Bilioteca de validação de dados de entrada em função do tipo)",
+    "type": "library",
+    "licence": "GNU-GPL-3.0",
+    "autoload": {
+        "psr-4": {
+            "Ngomafortuna\\Validate\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Ngoma M. Fortuna",
+            "email": "ngomafortuna@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.4"
+    }
+}
