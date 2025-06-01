@@ -2,7 +2,7 @@
     "name": "ngomafortuna/validate",
     "description": "Input data validation library based on type (Bilioteca de validação de dados de entrada em função do tipo)",
     "type": "library",
-    "licence": "GPL",
+    "licence": "MIT",
     "autoload": {
         "psr-4": {
             "Ngomafortuna\\Validate\\": "src/"
@@ -15,6 +15,6 @@
         }
     ],
     "require": {
-        "php": ">=7.4"
+        "php": ">=8.0"
     }
 }

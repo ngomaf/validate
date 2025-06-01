@@ -35,7 +35,7 @@ $cleanData = Validate::get([
 ```
 
 ## Require
-Necessary PHP 7.4 or more (Necessário PHP 7.4 ou superior)
+Necessary PHP 8.0 or more (Necessário PHP 8.0 ou superior)
 
 ## Test
 ```php
