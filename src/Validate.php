@@ -16,7 +16,7 @@ class Validate
 
         foreach($fields as $field => $type) {
 
-            $value = trim($data[$field]);
+            $value = trim($data[$field]); // remove space before end after phrase
 
             match($type) {
                 's' =>  $validate[$field] = filter_var($value, FILTER_SANITIZE_SPECIAL_CHARS), // or FILTER_SANITIZE_FULL_SPECIAL_CHARS

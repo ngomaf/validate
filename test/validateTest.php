@@ -12,6 +12,7 @@ $validate = new Validate;
 $data = [
     'full_name' => 'Rosa Fortuna <?php echo 123; ?>',
     'description' => 'Your description - Sua descrição',
+    'script' => '<?php echo 123; ?>',
     'edge' => 24,
     'genre' => 'F'
 ];
@@ -19,6 +20,7 @@ $data = [
 $cleanDate = $validate->get([
     'full_name' => 's',
     'description' => 's',
+    'script' => '*',
     'edge' => 'i',
     'genre' => 's'
 ], $data);
