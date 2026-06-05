@@ -11,29 +11,89 @@ namespace Ngomafortuna\Validate;
 class Validate
 {
     public static function get(array $fields, array $data): array {
-            
         $validate = [];
 
-        foreach($fields as $field => $type) {
+        foreach ($fields as $field => $type) {
+            if (!array_key_exists($field, $data)) {
+                continue;
+            }
 
-            $value = trim($data[$field]); // remove space before end after phrase
+            $rawValue = $data[$field];
+            $value = is_string($rawValue) ? trim($rawValue) : $rawValue;
 
-            match($type) {
-                's' =>  $validate[$field] = filter_var($value, FILTER_SANITIZE_SPECIAL_CHARS), // or FILTER_SANITIZE_FULL_SPECIAL_CHARS
-                'i' =>  $validate[$field] = (int) filter_var($value, FILTER_SANITIZE_NUMBER_INT),
-                'e' =>  $validate[$field] = filter_var($value, FILTER_SANITIZE_EMAIL),
-                'u' =>  $validate[$field] = filter_var($value, FILTER_SANITIZE_URL),
-                'b' =>  $validate[$field] = ($data[$field]=='on')? 1: 0, // bool 
-                '*' =>  $validate[$field] = $data[$field] // no chang
+            $validate[$field] = match ($type) {
+                's' => filter_var((string) $value, FILTER_SANITIZE_SPECIAL_CHARS),
+                'i' => self::validateInteger($value),
+                'e' => self::validateEmail($value),
+                'u' => self::validateUrl($value),
+                'b' => self::validateBoolean($value),
+                '*' => $rawValue,
+                default => $rawValue
             };
         }
 
         // remove sanitized item of the array $data
-		foreach(array_keys($data) as $index) {
-			if(in_array($index, array_keys($validate))) unset($data[$index]);
-		}
+        foreach (array_keys($data) as $index) {
+            if (array_key_exists($index, $validate)) {
+                unset($data[$index]);
+            }
+        }
 
         return array_merge($validate, $data);
+    }
+
+    private static function validateInteger(mixed $value): ?int
+    {
+        if (is_int($value)) {
+            return $value;
+        }
+
+        if (!is_string($value) && !is_float($value)) {
+            return null;
+        }
+
+        $int = filter_var($value, FILTER_VALIDATE_INT);
+        return ($int === false) ? null : $int;
+    }
+
+    private static function validateEmail(mixed $value): ?string
+    {
+        if (!is_string($value)) {
+            return null;
+        }
+
+        $email = filter_var(trim($value), FILTER_VALIDATE_EMAIL);
+        return ($email === false) ? null : $email;
+    }
+
+    private static function validateUrl(mixed $value): ?string
+    {
+        if (!is_string($value)) {
+            return null;
+        }
+
+        $url = filter_var(trim($value), FILTER_VALIDATE_URL);
+        if ($url === false) {
+            return null;
+        }
+
+        $scheme = strtolower((string) parse_url($url, PHP_URL_SCHEME));
+        if (!in_array($scheme, ['http', 'https'], true)) {
+            return null;
+        }
+
+        return $url;
+    }
+
+    private static function validateBoolean(mixed $value): ?int
+    {
+        $bool = filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+
+        if ($bool === null) {
+            return null;
+        }
+
+        return $bool ? 1 : 0;
     }
 
 }
